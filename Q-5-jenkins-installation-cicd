@@ -1,0 +1,61 @@
+ 5. Jenkins installation and setup explore the environment for. Continuous Integration and Continuous Deployment (CI/CD) in software development. 
+
+   Step 1: Install Java 17 (Required by Jenkins)
+   
+   Download Java 17 MSI (recommended):
+👉 jdk-17.0.12_windows-x64_bin.msi (https://download.oracle.com/java/17/archive/jdk-17.0.12_windows-x64_bin.msi)
+   
+   Install it and note the path:
+Example: C:\Program Files\Java\jdk-17.0.12\
+
+    Step 2: Install Jenkins on Windows
+Go to the official Jenkins download page:
+👉 https://www.jenkins.io/download/
+Click Windows > Download .msi installer.
+Run the installer and during setup:
+Select the Java 17 directory (C:\Program Files\Java\jdk-17.0.12)
+Choose default options for the rest.
+
+  Step 3: Unlock Jenkins
+After installation, Jenkins will start on:
+👉 http://localhost:8080
+Find the initial admin password from this file:
+C:\Program Files\Jenkins\secrets\initialAdminPassword
+Paste the password to unlock Jenkins.
+
+Step 4: Install Recommended Plugins
+Choose Install suggested plugins.
+Wait for the installation to finish.
+
+Step 5: Create Admin User
+Set up your admin username and password.
+Jenkins will redirect you to the Dashboard.
+
+CI/CD Pipeline with Jenkins
+Jenkins supports both Freestyle Projects and Declarative Pipelines:
+
+🔹 Example: Basic Pipeline Script
+-----
+  pipeline {
+  agent any
+  stages {
+    stage('Build') {
+      steps {
+        echo 'Building project...'
+      }
+    }
+    stage('Test') {
+      steps {
+        echo 'Running tests...'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        echo 'Deploying application...'
+      }
+    }
+  }
+}
+------
+
+  
