@@ -1,0 +1,59 @@
+Step 1: Create Flask App Files
+Create a folder called flask-app-github and add the following:
+app.py : 
+-----
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Welcome to my Flask app on GitHub!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
+-----
+
+
+requirements.txt
+------
+Flask==2.2.5
+------
+
+
+README.md(if asked/optional)
+-----
+# Flask GitHub App 🚀
+
+This is a simple Python Flask application pushed to GitHub.
+
+## ✅ How to Run
+
+```bash
+pip install -r requirements.txt
+python app.py
+------
+
+Visit http://localhost:5000 in your browser to see it running.
+
+-----
+
+---
+
+### ✅ Step 2: Initialize Git & Push to GitHub
+
+#### Inside the folder in terminal:
+
+```bash
+git init
+git add .
+git commit -m "Initial Flask app commit"
+git branch -M main
+git remote add origin https://github.com/tushar19083/flask-app-github.git
+git push -u origin main
+------
+
+
+Step 3: Verify
+Go to your GitHub repo (e.g., https://github.com/tushar19083/flask-app-github)
+You should see app.py, requirements.txt, and README.md files.
