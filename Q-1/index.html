@@ -1,0 +1,94 @@
+//Write code for a simple user registration form for an event using Flask and Docker in DevOps 
+
+Step 1: Setup Project Directory
+Create a project folder:
+    mkdir flask-registration-form
+    cd flask-registration-form
+
+Step 2: Create the Flask App
+Create a file named app.py: touch app.py
+Paste the following code inside app.py:
+
+-----
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('register.html')
+
+@app.route('/register', methods=['POST'])
+def register():
+    name = request.form['name']
+    email = request.form['email']
+    return f"Thanks {name}, you have registered with email {email}!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+-----
+
+
+
+Step 3: Create the HTML Form
+Create a folder for templates: mkdir templates
+Now create the form HTML file (inside template): register.html
+
+-----
+<!doctype html>
+<html>
+<head>
+    <title>Event Registration</title>
+</head>
+<body>
+    <h2>Register for the Event</h2>
+    <form action="/register" method="post">
+        Name: <input type="text" name="name" required><br><br>
+        Email: <input type="email" name="email" required><br><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+-----
+
+
+
+Step 4: Create requirements.txt
+Create a file named requirements.txt to specify the Python packages: echo "flask" > requirements.txt
+
+
+Step 5: Create the Dockerfile
+Now create a file named Dockerfile (no extension):
+Paste this code:
+-----
+# Use official Python base image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files to container
+COPY . .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose the Flask app port
+EXPOSE 5000
+
+# Run the Flask app
+CMD ["python", "app.py"]
+
+-----
+
+<!-- open docker deckstop in background -->
+
+Step 6: Build and Run the Docker Container
+Build the Docker Image
+Make sure Docker is installed and running, then run: (docker build -t flask-registration-form .)
+cmd : docker build -t flask-registration-form .
+
+Run the Container
+cmd : docker run -d -p 5000:5000 flask-registration-form
+
+Now open your browser and go to http://localhost:5000 to see the registration form.
