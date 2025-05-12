@@ -1,0 +1,120 @@
+ STEP 1: Prepare Your Flask App
+ Files: app.py 
+ ----
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, CI/CD!"
+
+if __name__ == '__main__':
+    app.run()
+ ----
+
+requirements.txt
+-----
+flask
+pytest
+-----
+
+test_app.py
+-----
+from app import app
+
+def test_home():
+    response = app.test_client().get('/')
+    assert response.status_code == 200
+    assert b"Hello, CI/CD!" in response.data
+-----
+
+STEP 2: Create Dockerfile
+----
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
+-----
+
+STEP 3: Create GitHub Repository
+Go to GitHub → New Repo → Name: flask-cicd
+Then push your code to GitHub: (if below don't work follw actual of github)
+-----
+git init
+git remote add origin https://github.com/<your-username>/flask-cicd.git
+git add .
+git commit -m "Initial Flask app with Docker and CI/CD"
+git branch -M main
+git push -u origin main
+-----
+
+STEP 4: Add GitHub Actions Workflow
+📁 Create: .github/workflows/flask-cicd.yml
+  -----
+  name: CI/CD for Flask App
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest
+
+    - name: Run tests
+      run: |
+        pytest
+
+    - name: Log in to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-cicd-app:latest .
+
+    - name: Push Docker image
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/flask-cicd-app:latest
+--------
+
+STEP 5: Add GitHub Secrets
+Go to your GitHub repo → Settings → Secrets and variables → Actions
+Add these two secrets:
+Name	Value
+DOCKER_USERNAME	your DockerHub username
+DOCKER_PASSWORD	your DockerHub password/token
+
+ STEP 6: Push Workflow to GitHub
+  git add .github/workflows/flask-cicd.yml
+  git commit -m "Add GitHub Actions CI/CD pipeline"
+  git push
+
+STEP 7: See CI/CD in Action
+Go to your repo → Actions tab
+
+  done
