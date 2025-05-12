@@ -1,0 +1,91 @@
+2.Develop a simple web application using Flask that allows users to register for an event. Containerize the application using Docker and run it in a Docker container
+
+STEP 1: Flask App Code (app.py)
+Create app.py:
+------
+from flask import Flask, render_template, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('register.html')
+
+@app.route('/register', methods=['POST'])
+def register():
+    name = request.form['name']
+    email = request.form['email']
+    return f"Thank you, {name}. Your registration with email {email} is successful!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+------
+
+
+
+STEP 2: HTML Template (templates/register.html)
+Create templates/register.html:
+------
+<!doctype html>
+<html>
+<head>
+    <title>Event Registration</title>
+</head>
+<body>
+    <h2>Register for the Event</h2>
+    <form action="/register" method="post">
+        Name: <input type="text" name="name" required><br><br>
+        Email: <input type="email" name="email" required><br><br>
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+
+------
+
+STEP 3: Python Dependencies (requirements.txt)
+Create requirements.txt:
+------
+flask
+------
+
+STEP 4: Dockerfile
+Create a file named Dockerfile:
+------
+# Use official Python image
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy app files
+COPY . .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose Flask port
+EXPOSE 5000
+
+# Run app
+CMD ["python", "app.py"]
+
+------
+
+
+STEP 5: Build Docker Image
+Make sure Docker Desktop is running.
+From inside your project directory:
+cmd : docker build -t flask-registration-form .
+
+
+STEP 6: Run the Docker Container
+cmd : docker run -d -p 5000:5000 flask-registration-form
+
+STEP 7: Open in Browser
+Go to:
+📍 http://localhost:5000
+You should see the registration form.
+
+
